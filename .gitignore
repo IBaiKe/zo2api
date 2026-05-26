@@ -16,6 +16,10 @@ pnpm-debug.log*
 .proxy-key
 .proxy-key.*
 
+# deploy/zo/install.sh 生成的 manifest 含 env_vars 实值，绝不入仓
+manifest.json
+deploy/**/manifest.json
+
 # 通用 env / secret 文件
 .env
 .env.*
