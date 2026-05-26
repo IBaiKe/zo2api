@@ -21,7 +21,9 @@
 | 2026-05-26 | dev 分支：记录生产参考参数到 deploy/REFERENCE.md | `70d2158` |
 | 2026-05-26 | push main / dev / v0.0.5 到 github.com/IBaiKe/zo2api | — |
 | 2026-05-26 | **dev-zo 分支：zo.computer 部署路径落地** | `39d2f93` / `fbd5fbf` |
-| 2026-05-26 | dev-zo：补 GEB 分形文档 L1/L2/L3 + 本 HISTORY | （本次提交） |
+| 2026-05-26 | dev-zo：补 GEB 分形文档 L1/L2/L3 + 本 HISTORY | `8dedf9a` |
+| 2026-05-26 | dev-zo：fix relative path normalization in install.sh | `e91464c` |
+| 2026-05-26 | **dev-zo：URL 模型修正（workspace-id 引入）** | （本次提交） |
 
 ---
 
@@ -134,3 +136,43 @@ dev-zo 分支**没有动一行 `index.mjs` / `responses.mjs`**。这不是疏忽
 4. **决策变更**要在本 HISTORY 追一节，不要让"为什么"丢失
 
 文档不是装饰，是给后人的电报。
+
+---
+
+## 决策追加 4：URL 模型修正（2026-05-26 后期补丁）
+
+**问题语境**：首次实测部署成功，但用户反馈服务实际 URL 是
+`anthropic-proxy-qgtrn35e97.zocomputer.io`，而非脚本与文档假设的
+`anthropic-proxy.zocomputer.io`。
+
+**初次误判**：以为 `qgtrn35e97` 是 zo 给每个服务**随机生成**的后缀。
+
+**真实模型**（用户纠正后落实）：
+
+```
+https://<workspace-id>.zo.computer            ← 用户的 zo 空间主页
+https://<label>-<workspace-id>.zocomputer.io  ← 部署的 User Service
+                ↑
+                workspace-id 是 per-account 稳定标识
+```
+
+`qgtrn35e97` 是**用户级稳定标识**，不是随机后缀。zo 文档"subdomain derived from
+label"实际意思是 `<label>-<workspace>` 复合，而非 `<label>` 单独成名。
+
+**修复策略**（已与用户对齐）：
+1. `install.sh` 增加交互式问询 workspace ID（来源：用户从 zo 空间主页 URL 拿）
+2. 拼装 `PUBLIC_DOMAIN=${LABEL}-${WORKSPACE}.zocomputer.io`
+3. workspace ID 留空时不设 PUBLIC_DOMAIN，banner 显示 localhost:8088（仅外观，不影响路由）
+4. 文档全量替换：`anthropic-proxy.zocomputer.io` →
+   `anthropic-proxy-<your-workspace-id>.zocomputer.io`
+
+**为什么不自动侦测 workspace ID**：未在 zo VM 文件系统或 env vars 中找到稳定暴露
+点。盲目猜测会带来"自动错误填充"比"留空让人填"更坏的体验。
+
+**对其它工件的影响**：零代码改动——`PUBLIC_DOMAIN` 仅参与 `index.mjs:1748` 的
+启动 banner，HTTP 路由由 zo PaaS 决定，与本 env 无关。这次修复纯粹是"文档与
+banner 对齐现实"。
+
+**关键教训**：第三方平台文档可能不完整，**实测优先于推断**。下次假设第三方平台
+的 URL 模式时，应先做一次最小部署、读真 URL，再固化。
+

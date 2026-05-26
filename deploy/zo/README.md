@@ -9,7 +9,8 @@
 # zo.computer 一键部署指南
 
 > 把 `zo2api` 作为 **User Service** 部署到 zo.computer。
-> 服务上线后通过 `https://anthropic-proxy.zocomputer.io` 对外暴露。
+> 服务上线后通过 `https://anthropic-proxy-<your-workspace-id>.zocomputer.io` 对外暴露
+> （workspace-id 是你 zo 空间主页 URL 的子域名，例如 `qgtrn35e97`）。
 
 ---
 
@@ -68,7 +69,7 @@ bash deploy/zo/install.sh
     "PROXY_API_KEY": "<your-proxy-key>",
     "ANTHROPIC_API_KEY": "<your-anthropic-key>",
     "OPENAI_API_KEY": "<your-openai-key>",
-    "PUBLIC_DOMAIN": "anthropic-proxy.zocomputer.io",
+    "PUBLIC_DOMAIN": "anthropic-proxy-<your-workspace-id>.zocomputer.io",
     ...
   },
   "public": "true"
@@ -80,9 +81,9 @@ Zo AI 解析后会调用 `register-user-service` 工具。
 ### Step 3 — 验证
 
 ```bash
-curl -fsS https://anthropic-proxy.zocomputer.io/health
+curl -fsS https://anthropic-proxy-<your-workspace-id>.zocomputer.io/health
 
-curl -fsS https://anthropic-proxy.zocomputer.io/v1/models \
+curl -fsS https://anthropic-proxy-<your-workspace-id>.zocomputer.io/v1/models \
   -H "x-api-key: $PROXY_API_KEY"
 ```
 
@@ -112,7 +113,7 @@ node -e 'console.log("sk-ant-proxy-" + require("crypto").randomBytes(12).toStrin
 cat > .env <<'EOF'
 PROXY_API_KEY=sk-ant-proxy-<上一步生成的>
 ANTHROPIC_API_KEY=<your key>
-PUBLIC_DOMAIN=anthropic-proxy.zocomputer.io
+PUBLIC_DOMAIN=anthropic-proxy-<your-workspace-id>.zocomputer.io
 PROXY_KEY_FILE=/home/workspace/anthropic-proxy/.proxy-key
 DEBUG_LOG_ENABLED=0
 NODE_ENV=production

@@ -150,6 +150,30 @@ if [[ -f "$ENV_FILE" ]]; then
 fi
 
 if [[ -z "${SKIP_ENV:-}" ]]; then
+  # ---- workspace ID -------------------------------------------------------
+  # zo.computer 的公开 URL 形如 <label>-<workspace-id>.zocomputer.io。
+  # workspace-id 是用户级稳定标识 (per-account)，不在文件系统暴露，需用户提供。
+  # 来源：用户的 zo 空间主页 URL，例如 https://qgtrn35e97.zo.computer
+  #       上面这个 URL 里的子域名就是 workspace-id。
+  echo
+  echo "${C_DIM}Workspace ID 是你 zo 空间主页 URL 的子域名${C_RST}"
+  echo "${C_DIM}例如 https://qgtrn35e97.zo.computer  →  workspace-id = qgtrn35e97${C_RST}"
+  printf '%sZo Workspace ID%s (可留空，banner 仅显示 localhost:8088): ' "$C_BLD" "$C_RST"
+  read -r ZO_WORKSPACE_ID
+  if [[ -n "$ZO_WORKSPACE_ID" ]]; then
+    if [[ ! "$ZO_WORKSPACE_ID" =~ ^[a-z0-9-]+$ ]]; then
+      warn "workspace ID 仅含小写字母数字与连字符；将忽略此输入"
+      ZO_WORKSPACE_ID=""
+    fi
+  fi
+  if [[ -n "$ZO_WORKSPACE_ID" ]]; then
+    PUBLIC_DOMAIN="${DEFAULT_LABEL}-${ZO_WORKSPACE_ID}.zocomputer.io"
+    ok "PUBLIC_DOMAIN = $PUBLIC_DOMAIN"
+  else
+    PUBLIC_DOMAIN=""
+    warn "未提供 workspace ID，PUBLIC_DOMAIN 留空（不影响路由，仅影响启动 banner）"
+  fi
+
   # ---- PROXY_API_KEY ------------------------------------------------------
   echo
   printf '%sPROXY_API_KEY%s (留空自动生成): ' "$C_BLD" "$C_RST"

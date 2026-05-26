@@ -12,7 +12,7 @@
     "OPENROUTER_API_KEY": "<optional>",
     "GEMINI_API_KEY": "<optional>",
     "ZO_CLIENT_IDENTITY_TOKEN": "<optional fallback>",
-    "PUBLIC_DOMAIN": "anthropic-proxy.zocomputer.io",
+    "PUBLIC_DOMAIN": "anthropic-proxy-<your-workspace-id>.zocomputer.io",
     "PROXY_KEY_FILE": "/home/workspace/anthropic-proxy/.proxy-key",
     "DEBUG_LOG_ENABLED": "0",
     "FETCH_TIMEOUT_MS": "120000",
