@@ -1,0 +1,49 @@
+# ============================================================================
+#  docker-compose.yml  ─ zo2api 单服务生产就绪编排
+# ----------------------------------------------------------------------------
+#  设计原则：
+#    - 单容器、零持久卷（状态全靠 .env 注入）
+#    - healthcheck 复用 Dockerfile 内置的 BusyBox wget
+#    - 资源限制 + 日志切片，防止单容器吃光宿主
+# ============================================================================
+
+services:
+  zo2api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: zo2api:dev
+    container_name: zo2api
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${HOST_PORT:-3000}:3000"
+
+    # Dockerfile 已声明 healthcheck，这里冗余声明保证 compose 也能可视化状态
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "1.0"
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # 防容器内进程通过 setuid 提权
+    security_opt:
+      - no-new-privileges:true
+
+    # /tmp 给 .proxy-key 与 debug.log 用，挂 tmpfs 走内存
+    tmpfs:
+      - /tmp:size=16m,mode=1777
