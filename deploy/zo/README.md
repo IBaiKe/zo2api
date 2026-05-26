@@ -1,3 +1,11 @@
+<!--
+[INPUT]:    依赖读者具备 zo.computer 账号 + 内置终端访问；依赖 IBaiKe/zo2api dev-zo 分支可达
+[OUTPUT]:   提供 zo.computer 部署的完整操作流程；可读、可手动执行的等价步骤；故障排查清单
+[POS]:      deploy/zo/ 的文档面；与 install.sh 配对（脚本是执行体、本文件是操作手册）；
+            HISTORY.md 是演化日志，与本文件互不重复
+[PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+-->
+
 # zo.computer 一键部署指南
 
 > 把 `zo2api` 作为 **User Service** 部署到 zo.computer。

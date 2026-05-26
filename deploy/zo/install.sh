@@ -2,6 +2,15 @@
 # ============================================================================
 #  deploy/zo/install.sh  ─  zo.computer 一键部署脚本
 # ----------------------------------------------------------------------------
+#  [INPUT]:    依赖 git / node>=18 / npm；从 GitHub IBaiKe/zo2api dev-zo
+#              分支拉源码；交互式读取 PROXY_API_KEY 与 provider keys
+#  [OUTPUT]:   写入 <target>/.env (mode 0600)；
+#              写入 <target>/manifest.json (mode 0600，.gitignore 排除)；
+#              stdout 打印 @register-user-service 话术供粘贴到 Zo AI
+#  [POS]:      deploy/zo/ 的主入口；与 README.md 配对（README 是文档、本文件是执行体）；
+#              被 package.json scripts.zo:install 调用
+#  [PROTOCOL]: 变更时更新此头部，然后检查 CLAUDE.md
+#
 #  在 zo.computer 内置终端中运行。完成 6 件事：
 #    1. 环境自检（非 zo.computer 仅警告，继续执行）
 #    2. 目标目录就绪（默认 /home/workspace/anthropic-proxy）

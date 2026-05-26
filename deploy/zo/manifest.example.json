@@ -1,5 +1,5 @@
 {
-  "$comment": "register-user-service payload template for zo.computer. Do NOT commit real KEY values. install.sh writes a working manifest.json (gitignored) into the deploy target.",
+  "$comment": "register-user-service payload template for zo.computer. Do NOT commit real KEY values. install.sh writes a working manifest.json (gitignored) into the deploy target. See deploy/zo/CLAUDE.md for the GEB contract.",
   "label": "anthropic-proxy",
   "mode": "http",
   "local_port": 8088,
