@@ -1,0 +1,55 @@
+# ============================================================================
+#  .gitignore  ─ zo2api
+#  Principle: keep the repo clean of (1) deps, (2) secrets, (3) runtime junk,
+#  (4) editor noise. Everything else is source of truth.
+# ============================================================================
+
+# ---- 依赖 ------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- 密钥与凭据 (NEVER commit) ---------------------------------------------
+# index.mjs:36 — 自动生成的代理 API key 落盘文件
+.proxy-key
+.proxy-key.*
+
+# 通用 env / secret 文件
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+secrets/
+credentials.json
+
+# ---- 运行时输出 ------------------------------------------------------------
+# index.mjs:40 — debug log 默认目录
+.anthropic-proxy/
+*.log
+logs/
+
+# ---- 测试与构建产物 --------------------------------------------------------
+coverage/
+.nyc_output/
+dist/
+build/
+*.tsbuildinfo
+
+# ---- 操作系统垃圾 ----------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- 编辑器 / IDE ----------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ---- Claude / AI 工具元数据 ------------------------------------------------
+.claude/

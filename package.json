@@ -1,0 +1,16 @@
+{
+  "name": "zo2api-update",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "undici": "^6.21.0"
+  }
+}
