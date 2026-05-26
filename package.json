@@ -5,7 +5,13 @@
   "type": "module",
   "main": "index.mjs",
   "scripts": {
-    "start": "node index.mjs"
+    "start": "node index.mjs",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f zo2api",
+    "docker:restart": "docker compose restart zo2api",
+    "install:bash": "bash scripts/install.sh",
+    "install:ps": "powershell -ExecutionPolicy Bypass -File scripts/install.ps1"
   },
   "engines": {
     "node": ">=18"
