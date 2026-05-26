@@ -874,20 +874,23 @@ function zoNormalize(s) {
 
 function mapToZoModel(name) {
   if (!name) return null;
-  if (name.startsWith("zo:")) return name;
-  const wanted = zoNormalize(name);
-  // Exact match first.
+  // The zo: prefix is a proxy-only routing hint. Zo's /zo/ask expects the
+  // bare form (e.g. "anthropic/claude-opus-4-7"); leaving the prefix in the
+  // payload triggers an Unknown-model fallback to the default subscribers
+  // model, which then returns 403 for non-subscribers.
+  const bare = name.startsWith("zo:") ? name.slice(3) : name;
+  const wanted = zoNormalize(bare);
+  const strip = (s) => (s && s.startsWith("zo:") ? s.slice(3) : s);
+
   const exact = zoModelCache.find(m => zoNormalize(m.model_name) === wanted);
-  if (exact) return exact.model_name;
-  // Contains match, shortest first to avoid spurious overshoots.
+  if (exact) return strip(exact.model_name);
   const contains = zoModelCache
     .filter(m => {
       const n = zoNormalize(m.model_name);
       return n.includes(wanted) || wanted.includes(n);
     })
     .sort((a, b) => a.model_name.length - b.model_name.length)[0];
-  if (contains) return contains.model_name;
-  // Vendor heuristic.
+  if (contains) return strip(contains.model_name);
   const lower = name.toLowerCase();
   let vendor = null;
   if (lower.includes("claude")) vendor = "anthropic";
@@ -899,8 +902,8 @@ function mapToZoModel(name) {
   if (vendor) {
     const candidates = zoModelCache.filter(m => m.model_name.includes(vendor));
     const nonCodex = candidates.find(m => !m.model_name.toLowerCase().includes("codex"));
-    if (nonCodex) return nonCodex.model_name;
-    if (candidates[0]) return candidates[0].model_name;
+    if (nonCodex) return strip(nonCodex.model_name);
+    if (candidates[0]) return strip(candidates[0].model_name);
   }
   return null;
 }
