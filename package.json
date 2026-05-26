@@ -5,7 +5,9 @@
   "type": "module",
   "main": "index.mjs",
   "scripts": {
-    "start": "node index.mjs"
+    "start": "node index.mjs",
+    "zo:install": "bash deploy/zo/install.sh",
+    "zo:test": "node test-conversion.mjs && node test-injection-guard.mjs"
   },
   "engines": {
     "node": ">=18"
