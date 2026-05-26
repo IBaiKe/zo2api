@@ -33,7 +33,6 @@ readonly DEFAULT_LABEL="anthropic-proxy"
 readonly DEFAULT_PORT="8088"
 readonly DEFAULT_WORKDIR_ROOT="/home/workspace"
 readonly DEFAULT_TARGET="${DEFAULT_WORKDIR_ROOT}/${DEFAULT_LABEL}"
-readonly PUBLIC_DOMAIN="${DEFAULT_LABEL}.zocomputer.io"
 
 # ----------------------------------------------------------------------------
 #  颜色（NO_COLOR 标准遵守）
