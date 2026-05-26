@@ -73,6 +73,17 @@ log "Step 2/6: 准备目标目录"
 read -r -p "目标目录 [${DEFAULT_TARGET}]: " TARGET
 TARGET="${TARGET:-$DEFAULT_TARGET}"
 
+# ----------------------------------------------------------------------------
+#  路径正规化：用户可能输入相对路径（如 "zoapi"），但后续 cd 会变 cwd，
+#  所有 $TARGET/.env / $TARGET/manifest.json 这类拼接必须基于绝对路径。
+# ----------------------------------------------------------------------------
+if [[ "$TARGET" != /* ]]; then
+  TARGET="$(pwd)/$TARGET"
+fi
+# 折叠 // 与 ./ 等冗余形式（不要求路径已存在）
+TARGET="$(cd "$(dirname "$TARGET")" 2>/dev/null && pwd)/$(basename "$TARGET")" || true
+ok "目标绝对路径: $TARGET"
+
 if [[ -e "$TARGET" ]]; then
   if [[ -d "$TARGET/.git" ]]; then
     warn "目标已存在且为 git 仓库"
